@@ -2875,4 +2875,70 @@ describe('src/Core', () => {
       expect(console.error.mock.calls.length).toBe(1)
     })
   })
+
+  describe('NetworkError localization', () => {
+    it('should translate network errors using the active locale', () => {
+      using core = new Core({
+        locale: {
+          strings: {
+            networkError: 'Custom localized network error',
+          },
+          pluralize: () => 0,
+        },
+      })
+      core.setState({
+        files: {
+          // @ts-expect-error test does not care about missing properties
+          fileId: {
+            id: 'fileId',
+            name: 'filename',
+          },
+        },
+      })
+      const networkError = Object.assign(new Error('connection refused'), {
+        isNetworkError: true,
+      })
+      core.emit('upload-error', core.getFile('fileId'), networkError)
+      // The file-level error reflects the translated network error message
+      expect(core.getFile('fileId')?.error).toEqual(
+        'Custom localized network error',
+      )
+    })
+
+    it('should fall back to the default English message when no locale override is set', () => {
+      using core = new Core()
+      core.setState({
+        files: {
+          // @ts-expect-error test does not care about missing properties
+          fileId: {
+            id: 'fileId',
+            name: 'filename',
+          },
+        },
+      })
+      const networkError = Object.assign(new Error('connection refused'), {
+        isNetworkError: true,
+      })
+      core.emit('upload-error', core.getFile('fileId'), networkError)
+      // The file-level error reflects the default English network error string
+      expect(core.getFile('fileId')?.error).toContain('network error')
+    })
+
+    it('should preserve original message for non-network errors', () => {
+      using core = new Core()
+      core.setState({
+        files: {
+          // @ts-expect-error test does not care about missing properties
+          fileId: {
+            id: 'fileId',
+            name: 'filename',
+          },
+        },
+      })
+      const regularError = new Error('regular upload error')
+      core.emit('upload-error', core.getFile('fileId'), regularError)
+      // The file-level error reflects the original error message unchanged
+      expect(core.getFile('fileId')?.error).toEqual('regular upload error')
+    })
+  })
 })

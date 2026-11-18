@@ -1717,7 +1717,10 @@ export class Uppy<
       file,
       response,
     ) => {
-      let errorMsg = error.message || 'Unknown error'
+      let errorMsg =
+        'isNetworkError' in error && error.isNetworkError
+          ? this.i18n('networkError')
+          : error.message || 'Unknown error'
       if (error.details) {
         errorMsg += ` ${error.details}`
       }

@@ -175,6 +175,8 @@ en_US.strings = {
     'Moving item %{item} of %{items}: %{done} of %{total} files…',
   movingItems: 'Moving %{done} of %{total} items…',
   myDevice: 'My Device',
+  networkError:
+    'This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.',
   newFolder: 'New folder…',
   newFolderPrompt: 'Name of the new folder:',
   newFolderTitle: 'New folder',

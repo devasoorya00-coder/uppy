@@ -33,6 +33,8 @@ export default {
     failedToUpload: 'Failed to upload %{file}',
     noInternetConnection: 'No Internet connection',
     connectedToInternet: 'Connected to the Internet',
+    networkError:
+      'This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.',
     // Strings for remote providers
     noFilesFound: 'You have no files or folders here',
     noSearchResults: 'Unfortunately, there are no results for this search',
